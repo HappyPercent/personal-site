@@ -1,0 +1,51 @@
+.tree {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: min(360px, 38vw);
+  color: var(--line-2);
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.merged {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+.merged[data-on="true"] {
+  opacity: 1;
+}
+
+.drag {
+  position: absolute;
+  right: 56px;
+  bottom: 24px;
+  z-index: 5;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 0;
+  cursor: grab;
+  opacity: 0.6;
+  touch-action: none;
+  transition: opacity 0.2s;
+}
+.drag:hover {
+  opacity: 1;
+}
+.drag[data-dragging="true"] {
+  cursor: grabbing;
+  opacity: 1;
+  z-index: 20;
+}
+
+@media (max-width: 900px) {
+  .tree { opacity: 0.3; }
+  .drag { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .merged,
+  .drag { transition: none; }
+}

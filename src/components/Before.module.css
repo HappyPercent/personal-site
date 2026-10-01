@@ -1,0 +1,19 @@
+.title {
+  margin: 16px 0 0;
+  font-size: clamp(30px, 4vw, 56px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.line {
+  margin: 28px 0 0;
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 560px;
+}
+
+@media (max-width: 900px) {
+  .line { font-size: 18px; }
+}

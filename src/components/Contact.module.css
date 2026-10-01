@@ -1,0 +1,29 @@
+.title {
+  margin: 12px 0 28px;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.soonRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.soon {
+  border: 1px dashed var(--line);
+  border-radius: 20px;
+  padding: 20px 24px;
+}
+.soon div {
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .soonRow { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+}

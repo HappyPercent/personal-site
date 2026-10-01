@@ -1,0 +1,24 @@
+.deco {
+  position: absolute;
+  z-index: 1;
+  opacity: 0.5;
+  line-height: 0;
+  transition: transform 0.2s ease-out, opacity 0.2s;
+}
+.deco:hover {
+  opacity: 0.9;
+  transform: rotate(-8deg) scale(1.1);
+}
+
+.tr { top: 96px; right: 56px; }
+.br { bottom: 24px; right: 56px; }
+.bl { bottom: 24px; left: 56px; }
+.tl { top: 96px; left: 56px; }
+
+@media (max-width: 900px) {
+  .deco { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deco { transition: none; }
+}

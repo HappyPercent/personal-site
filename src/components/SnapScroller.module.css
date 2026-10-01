@@ -1,0 +1,49 @@
+.scroller {
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) var(--bg);
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.dots {
+  position: fixed;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.dotLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--line-2);
+  transition: transform 0.2s, background 0.2s;
+}
+.dot[data-active="true"] {
+  background: var(--accent);
+  transform: scale(1.5);
+}
+
+@media (max-width: 900px) {
+  .dots { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroller { scroll-behavior: auto; }
+  .dot { transition: none; }
+}

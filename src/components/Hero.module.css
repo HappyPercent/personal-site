@@ -1,0 +1,36 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 48px;
+  align-items: center;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(36px, 4.4vw, 62px);
+  line-height: 0.98;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.avatarWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.avatarCard {
+  border-radius: 48px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 24px 24px 12px;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+}

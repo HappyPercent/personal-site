@@ -1,0 +1,32 @@
+.header {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 10;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  font-size: 15px;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  flex-grow: 1;
+}
+
+.soon {
+  color: var(--dim);
+}
+
+@media (max-width: 900px) {
+  .row { gap: 16px; padding-top: 20px; }
+  .link,
+  .soon { display: none; }
+}

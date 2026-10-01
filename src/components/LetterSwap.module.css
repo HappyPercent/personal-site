@@ -1,0 +1,42 @@
+.swap {
+  display: inline-grid;
+  justify-items: start;
+  overflow: hidden;
+  vertical-align: bottom;
+  color: var(--accent);
+  padding: 0.06em 0;
+  margin: -0.06em 0;
+}
+.swap[data-ready="true"] {
+  width: var(--w0);
+  animation: fit 7s ease-in-out infinite;
+}
+
+.letters {
+  grid-area: 1 / 1;
+  justify-self: start;
+  animation: roll 7s ease-in-out infinite;
+}
+
+.second {
+  animation-delay: -3.5s;
+}
+
+@keyframes roll {
+  0%, 40% { transform: translateY(0); opacity: 1; }
+  48% { transform: translateY(-110%); opacity: 0; }
+  48.01%, 90% { transform: translateY(110%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fit {
+  0%, 40% { width: var(--w0); }
+  50%, 90% { width: var(--w1); }
+  100% { width: var(--w0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swap[data-ready="true"] { animation: none; }
+  .letters { animation: none; }
+  .second { visibility: hidden; }
+}

@@ -1,0 +1,34 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  transition: transform 0.2s ease-out, border-color 0.2s ease-out;
+}
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+}
+
+.lead {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 560px;
+}
+
+.bigTitle {
+  margin: 12px 0 40px;
+  font-size: clamp(36px, 4.5vw, 64px);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  max-width: 760px;
+}
+
+@media (max-width: 900px) {
+  .lead { font-size: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+}

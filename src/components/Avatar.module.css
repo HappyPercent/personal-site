@@ -1,0 +1,43 @@
+.avatar {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.pop { animation: pop 0.45s ease-out; }
+
+.blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5s infinite;
+}
+.pupils { transition: transform 0.12s ease-out; }
+.brow { transition: transform 0.2s ease-out; }
+
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+@keyframes pop {
+  0% { transform: scale(1) rotate(0); }
+  30% { transform: scale(1.07) rotate(-3deg); }
+  60% { transform: scale(0.98) rotate(2deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blink,
+  .pop { animation: none; }
+  .pupils,
+  .brow { transition: none; }
+}
