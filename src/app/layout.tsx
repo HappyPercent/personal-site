@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Bricolage_Grotesque, JetBrains_Mono } from "next/font/google";
 import { EggsProvider } from "@/components/Eggs";
+import { analytics } from "@/content/analytics";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -32,6 +34,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
         <EggsProvider>{children}</EggsProvider>
+        {analytics.websiteId && (
+          <Script src={analytics.scriptUrl} data-website-id={analytics.websiteId} strategy="afterInteractive" />
+        )}
       </body>
     </html>
   );

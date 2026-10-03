@@ -11,7 +11,7 @@ const rows = [
   ["LIVE", "Server-sent events will push new sticky notes to every open tab."],
   ["HOSTING", "A home server behind a Cloudflare Tunnel. Yes, really."],
   ["SPEED","Lighthouse score: measured and listed here once the site is deployed."],
-  ["ANALYTICS", `Umami, self-hosted (coming soon). ${joke("no-cookies")}`],
+  ["ANALYTICS", `Umami, self-hosted on the same home server. Page views only, no personal data. ${joke("no-cookies")}`],
 ];
 
 export function DrawerButton() {

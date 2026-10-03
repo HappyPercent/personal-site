@@ -35,5 +35,43 @@ services:
     networks:
       - site
 
+  umami-db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ${UMAMI_DB_PASSWORD:?set UMAMI_DB_PASSWORD in .env}
+    volumes:
+      - umami-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 256m
+    networks:
+      - analytics
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://umami:${UMAMI_DB_PASSWORD}@umami-db:5432/umami
+      APP_SECRET: ${UMAMI_APP_SECRET:?set UMAMI_APP_SECRET in .env}
+      DISABLE_TELEMETRY: "1"
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    mem_limit: 512m
+    networks:
+      - site
+      - analytics
+
 networks:
   site: {}
+  analytics:
+    internal: true
+
+volumes:
+  umami-db: {}
