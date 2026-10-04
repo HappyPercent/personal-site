@@ -23,9 +23,9 @@ describe("VimNote", () => {
   it("needs two clicks to count as escaping Vim", async () => {
     const note = setup();
     await userEvent.click(note);
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/3");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/5");
     await userEvent.click(note);
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/3");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/5");
     expect(screen.getByRole("status")).toHaveTextContent("Escaped Vim");
   });
 });

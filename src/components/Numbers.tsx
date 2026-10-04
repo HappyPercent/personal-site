@@ -1,4 +1,4 @@
-import { Deco } from "@/components/Icons";
+import { BugEgg } from "@/components/BugEgg";
 import { Section, Wrap } from "@/components/Section";
 import { VimNote } from "@/components/VimNote";
 import { stats } from "@/content/profile";
@@ -26,7 +26,7 @@ export function Numbers() {
           <VimNote />
         </div>
       </Wrap>
-      <Deco name="bug" pos="tr" />
+      <BugEgg />
     </Section>
   );
 }

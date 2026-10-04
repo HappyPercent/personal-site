@@ -17,6 +17,8 @@ export const eggs = [
   { id: "branch", label: "Branch merged" },
   { id: "avatar", label: "Avatar whisperer" },
   { id: "vim", label: "Escaped Vim" },
+  { id: "bug", label: "You fixed a bug!" },
+  { id: "lost", label: "You made it this far, I am impressed" },
 ] as const;
 
 type EggId = (typeof eggs)[number]["id"];
