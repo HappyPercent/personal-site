@@ -6,6 +6,10 @@
   letter-spacing: -0.03em;
 }
 
+.titleLine {
+  display: block;
+}
+
 .line {
   margin: 28px 0 0;
   font-size: 22px;

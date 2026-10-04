@@ -1,17 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { joke } from "@/content/jokes";
 import styles from "./Drawer.module.css";
 
-const rows = [
-  ["FRAMEWORK", "Next.js and strict TypeScript, deployed as a small standalone Docker image."],
-  ["MOTION", "CSS scroll reveals and snap scrolling. Everything is off under reduced-motion."],
-  ["DATA", "SQLite for the wall (coming), so there is one file to back up."],
-  ["LIVE", "Server-sent events will push new sticky notes to every open tab."],
-  ["HOSTING", "A home server behind a Cloudflare Tunnel. Yes, really."],
-  ["SPEED", "Lighthouse on the live site: 96 on mobile and 100 on desktop for performance, 100 for best practices and SEO."],
-  ["ANALYTICS", `Umami, self-hosted on the same home server. Page views only, no personal data. ${joke("no-cookies")}`],
+const K = ({ children }: { children: ReactNode }) => <span className="accent">{children}</span>;
+
+const rows: [string, ReactNode][] = [
+  ["FRAMEWORK", <><K>Next.js</K> and strict <K>TypeScript</K>, deployed as a small standalone <K>Docker</K> image.</>],
+  ["MOTION", <><K>CSS</K> scroll reveals and snap scrolling. Everything is off under reduced-motion.</>],
+  ["DATA", <><K>SQLite</K> for the wall (coming), so there is one file to back up.</>],
+  ["LIVE", <><K>Server-sent events</K> will push new sticky notes to every open tab.</>],
+  ["HOSTING", <>A home server behind a <K>Cloudflare Tunnel</K>. Yes, really.</>],
+  ["SPEED", <><K>Lighthouse</K> on the live site: <K>96</K> on mobile and <K>100</K> on desktop for performance, <K>100</K> for best practices and SEO.</>],
+  ["ANALYTICS", <><K>Umami</K>, self-hosted on the same home server. Page views only, no personal data. {joke("no-cookies")}</>],
 ];
 
 export function DrawerButton() {

@@ -43,56 +43,9 @@
   margin-bottom: 6px;
 }
 
-.stennHead {
-  display: flex;
-  align-items: baseline;
-  gap: 20px;
-  margin: 8px 0 28px;
-}
-.stennYear {
-  font-size: clamp(64px, 8vw, 112px);
-  margin: 0;
-}
-.stennCompany {
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--accent);
-}
-.stennGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr);
-  align-items: stretch;
-  gap: 8px;
-}
-.stage {
-  display: flex;
-}
-.stennGrid .card {
-  padding: 28px 32px;
-  gap: 12px;
-  width: 100%;
-}
-.stennGrid .title {
-  font-size: 28px;
-}
-.stennGrid .card ul {
-  font-size: 16px;
-  margin-top: 4px;
-}
-.arrow {
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
 @media (max-width: 900px) {
   .grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
   .card { padding: 24px; }
   .title { font-size: 28px; }
   .card ul { font-size: 16px; }
-  .stennGrid { grid-template-columns: minmax(0, 1fr); }
-  .arrow { transform: rotate(90deg); padding: 8px 0; }
 }

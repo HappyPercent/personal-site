@@ -18,34 +18,29 @@ export const netchex: Stage = {
   ],
 };
 
-export const stenn: { years: string; company: string; stages: Stage[] } = {
-  years: "2021–24",
-  company: "Stenn",
-  stages: [
-    {
-      dates: "Jan 2021 to Dec 2023",
-      place: "Remote",
-      title: "Senior Frontend Developer",
-      company: "Stenn",
-      bullets: [
-        "Introduced GraphQL for new requests, improving data-fetch interactions by about 20%.",
-        "Cut the frontend codebase by 25% through systematic refactoring.",
-        "Added Jest and React Testing Library coverage; generated API clients from OpenAPI in CI.",
-        "Mentored a QA engineer into a frontend role.",
-      ],
-    },
-    {
-      dates: "Dec 2023 to Dec 2024",
-      place: "Barcelona",
-      title: "Engineering Manager",
-      company: "Stenn",
-      bullets: [
-        "Built and led a new 5-person team owning financing and data integration services.",
-        "Introduced an Agile process with a predictable sprint cadence and three deployments per sprint.",
-        "Put metrics-driven monitoring and alerting into production.",
-      ],
-    },
-  ],
+export const stennDev: Stage = {
+    dates: "Jan 2021 to Dec 2023",
+    place: "Remote",
+    title: "Senior Frontend Developer",
+    company: "Stenn",
+    bullets: [
+      "Introduced GraphQL for new requests, improving data-fetch interactions by about 20%.",
+      "Cut the frontend codebase by 25% through systematic refactoring.",
+      "Added Jest and React Testing Library coverage; generated API clients from OpenAPI in CI.",
+      "Mentored a QA engineer into a frontend role.",
+    ],
+};
+
+export const stennLead: Stage = {
+    dates: "Dec 2023 to Dec 2024",
+    place: "Barcelona",
+    title: "Engineering Manager",
+    company: "Stenn",
+    bullets: [
+      "Built and led a new 5-person team owning financing and data integration services.",
+      "Introduced an Agile process with a predictable sprint cadence and three deployments per sprint.",
+      "Put metrics-driven monitoring and alerting into production.",
+    ],
 };
 
 export const aori: Stage = {
@@ -61,14 +56,13 @@ export const aori: Stage = {
 };
 
 export const beforeCode = {
-  heading:
-    "Analyst at Sberbank. Product manager at Raiffeisenbank. Project team manager at Otkritie.",
+  lines: ["Analyst at Sberbank.", "Product manager at Raiffeisenbank.", "Project team manager at Otkritie."],
   line: "It's why I ask for the business case before the library.",
 };
 
 export const skills = [
   { name: "FRONTEND", items: ["TypeScript", "React", "Redux", "Next.js", "GraphQL", "WebSockets", "Storybook", "Web performance"] },
-  { name: "BACKEND", items: ["C#", ".NET", "REST", "BFF", "Domain-driven design"] },
+  { name: "BACKEND", items: ["C#", ".NET", "SQL", "REST", "BFF", "Domain-driven design"] },
   { name: "QUALITY AND DEVOPS", items: ["Jest", "React Testing Library", "CI/CD", "Docker", "Azure", "Sentry", "Elastic"] },
   { name: "LEADING", items: ["Team leadership", "Mentoring", "Hiring", "Agile and Scrum", "Metrics", "Stakeholders"] },
 ];
