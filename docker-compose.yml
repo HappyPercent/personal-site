@@ -49,6 +49,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    security_opt:
+      - no-new-privileges:true
     mem_limit: 256m
     networks:
       - analytics
@@ -63,6 +65,10 @@ services:
     depends_on:
       umami-db:
         condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     mem_limit: 512m
     networks:
       - site
