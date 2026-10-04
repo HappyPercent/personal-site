@@ -10,6 +10,7 @@ export const bugFlight = [
   { x: -60, y: 170 },
 ] as const;
 
+const runMs = 600;
 const origin = { x: 0, y: 0 };
 
 export function BugEgg() {
@@ -27,6 +28,7 @@ export function BugEgg() {
     if (flights < bugFlight.length) {
       setFlights(flights + 1);
       setRunning(true);
+      setTimeout(() => setRunning(false), runMs);
     } else {
       setSmashedHere(true);
       find("bug");
@@ -48,9 +50,6 @@ export function BugEgg() {
       onPointerEnter={approach}
       onClick={(e: MouseEvent<HTMLButtonElement>) => {
         if (e.detail === 0) approach();
-      }}
-      onTransitionEnd={(e) => {
-        if (e.target === e.currentTarget && e.propertyName === "transform") setRunning(false);
       }}
     >
       <span className={styles.heading} style={{ transform: `rotate(${heading}deg)` }}>

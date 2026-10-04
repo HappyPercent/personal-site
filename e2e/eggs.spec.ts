@@ -21,13 +21,22 @@ test.describe("easter eggs", () => {
     await page.goto("/");
     const counter = page.getByTitle("Hidden easter eggs found");
     const bug = page.getByRole("button", { name: "A bug. Try to catch it." });
+    // The bug detaches itself once smashed, so move the mouse by hand instead of using hover(), which retries on detach.
+    const approach = async () => {
+      await bug.scrollIntoViewIfNeeded();
+      const box = await bug.boundingBox();
+      if (!box) throw new Error("bug has no box");
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    };
 
     for (let i = 0; i < 2; i++) {
-      await bug.hover();
+      await approach();
+      await expect(bug).toHaveAttribute("data-running", "true");
+      await expect(bug).toHaveAttribute("data-running", "false");
       await expect(counter).toContainText("0/5");
       await page.mouse.move(0, 0);
     }
-    await bug.hover();
+    await approach();
 
     await expect(page.getByRole("status")).toContainText("You fixed a bug!");
     await expect(counter).toContainText("1/5");
