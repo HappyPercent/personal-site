@@ -1,7 +1,6 @@
 export type Joke = { id: string; text: string; tags: string[] };
 
 export const jokeBank: Joke[] = [
-  { id: "works-on-my-machine", text: "it works on my machine", tags: ["classic"] },
   { id: "witcher-gpu", text: "Yes, I need this GPU for work. Not for Witcher 3 Remastered.", tags: ["hardware"] },
   { id: "automation", text: "Spent 3 days automating a 15-minute task. Worth it.", tags: ["devops"] },
   { id: "sprints", text: "I'm not an endurance athlete. Sprints are my max.", tags: ["agile", "stenn"] },
@@ -21,7 +20,7 @@ export const jokeBank: Joke[] = [
   { id: "loading", text: "Loading... still faster than npm install.", tags: ["loading"] },
   {
     id: "cocoa",
-    text: "I see you. Your visit is saved and I will remember it. But I won't track you, because I don't use cookies. I use cocoa.",
+    text: "I see you. Your visit is saved and I will remember it.",
     tags: ["analytics"],
   },
 ];
