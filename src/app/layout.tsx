@@ -27,6 +27,7 @@ export const metadata: Metadata = {
     description: profile.pitch,
     type: "website",
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
