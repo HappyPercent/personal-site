@@ -15,6 +15,20 @@ npm run build && npm start
 The dev server runs at http://localhost:3000. To open it from another device on
 your network, set `DEV_ORIGINS` (comma-separated hosts) in `.env.local`.
 
+## Test
+
+```bash
+npm test
+npm run test:coverage
+npx playwright install chromium
+npm run build && npm run test:e2e
+```
+
+Unit and component tests use Vitest and Testing Library and sit next to the code
+as `*.test.ts(x)`. End-to-end tests use Playwright with axe accessibility checks
+and run against the production build on desktop and mobile viewports. CI runs
+both before the image is published.
+
 ## Layout
 
 - `src/content/` all copy and data (roles, skills, jokes). Edit text here.

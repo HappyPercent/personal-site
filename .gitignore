@@ -30,3 +30,6 @@ yarn-error.log*
 next-env.d.ts
 
 PLAN.md
+
+/playwright-report/
+/test-results/
