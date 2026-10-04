@@ -6,7 +6,7 @@
 }
 
 .year {
-  font-size: clamp(110px, 14vw, 200px);
+  font-size: clamp(96px, 12vw, 168px);
   line-height: 0.9;
   font-weight: 800;
   letter-spacing: -0.05em;
