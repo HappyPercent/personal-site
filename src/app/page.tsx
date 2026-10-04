@@ -13,8 +13,8 @@ const sections: Section[] = [
   { id: "hero", label: "Hello" },
   { id: "numbers", label: "Numbers" },
   { id: "netchex", label: "Netchex" },
-  { id: "stenn", label: "Stenn" },
   { id: "stenn-lead", label: "Stenn management" },
+  { id: "stenn", label: "Stenn" },
   { id: "aori", label: "Aori" },
   { id: "before", label: "Before code" },
   { id: "tools", label: "Toolbox" },
@@ -28,8 +28,8 @@ export default function Home() {
       <Hero />
       <Numbers />
       <SingleRole id="netchex" year="2025" stage={netchex} />
-      <SingleRole id="stenn" year="2021" stage={stennDev} />
-      <SingleRole id="stenn-lead" year="2023" stage={stennLead} deco="coffee" />
+      <SingleRole id="stenn-lead" year="2023" stage={stennLead} />
+      <SingleRole id="stenn" year="2021" stage={stennDev} deco="coffee" />
       <SingleRole id="aori" year="2020" stage={aori} />
       <Before />
       <Toolbox />
