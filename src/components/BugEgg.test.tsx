@@ -55,7 +55,8 @@ describe("BugEgg", () => {
     const bug = setup();
     for (let i = 0; i < 3; i++) await approach(bug);
     const squashed = screen.getByRole("button", { name: "A squashed bug. You fixed it." });
-    fireEvent.animationEnd(squashed.querySelector("span span") as HTMLElement);
+    // jsdom has no CSS animation support, so React listens for the prefixed name
+    fireEvent(squashed.querySelector("span span") as HTMLElement, new Event("webkitAnimationEnd", { bubbles: true }));
     expect(screen.queryByRole("button", { name: /bug/i })).not.toBeInTheDocument();
   });
 
