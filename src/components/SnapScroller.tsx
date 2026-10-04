@@ -43,7 +43,7 @@ export function SnapScroller({
   }, []);
 
   return (
-    <div ref={ref} className={styles.scroller}>
+    <main ref={ref} className={styles.scroller}>
       {header}
       <nav aria-label="Sections" className={styles.dots}>
         {sections.map((s, i) => (
@@ -53,6 +53,6 @@ export function SnapScroller({
         ))}
       </nav>
       {children}
-    </div>
+    </main>
   );
 }
