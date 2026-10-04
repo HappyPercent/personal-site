@@ -12,6 +12,7 @@ const rows: [string, ReactNode][] = [
   ["DATA", <><K>SQLite</K> for the wall (coming), so there is one file to back up.</>],
   ["LIVE", <><K>Server-sent events</K> will push new sticky notes to every open tab.</>],
   ["HOSTING", <>A home server behind a <K>Cloudflare Tunnel</K>. Yes, really.</>],
+  ["TESTING", <><K>Vitest</K> and <K>Testing Library</K> for components, <K>Playwright</K> for end-to-end on desktop and mobile, <K>axe-core</K> for accessibility. All of it runs in <K>GitHub Actions</K>, and a red test blocks the deploy.</>],
   ["SPEED", <><K>Lighthouse</K> on the live site: <K>96</K> on mobile and <K>100</K> on desktop for performance, <K>100</K> for best practices and SEO.</>],
   ["ANALYTICS", <><K>Umami</K>, self-hosted on the same home server. Page views only, no personal data. {joke("no-cookies")}</>],
 ];

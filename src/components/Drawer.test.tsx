@@ -51,13 +51,13 @@ describe("Drawer", () => {
     render(<DrawerButton />);
     const highlighted = [...dialog().querySelectorAll(".accent")].map((n) => n.textContent);
     expect(highlighted).toEqual(
-      expect.arrayContaining(["Next.js", "TypeScript", "Docker", "SQLite", "Cloudflare Tunnel", "Lighthouse", "Umami"]),
+      expect.arrayContaining(["Next.js", "TypeScript", "Docker", "SQLite", "Cloudflare Tunnel", "Lighthouse", "Umami", "Vitest", "Testing Library", "Playwright", "axe-core", "GitHub Actions"]),
     );
   });
 
   it("lists every how-it's-done row", () => {
     render(<DrawerButton />);
-    for (const key of ["FRAMEWORK", "MOTION", "DATA", "LIVE", "HOSTING", "SPEED", "ANALYTICS"]) {
+    for (const key of ["FRAMEWORK", "MOTION", "DATA", "LIVE", "HOSTING", "TESTING", "SPEED", "ANALYTICS"]) {
       expect(within(dialog()).getByText(key)).toBeInTheDocument();
     }
   });
