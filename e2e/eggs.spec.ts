@@ -16,13 +16,13 @@ test.describe("easter eggs", () => {
     await expect(page.getByTitle("Hidden easter eggs found")).toContainText("1/5");
   });
 
-  test("the bug runs away three times and is smashed on the fourth try", async ({ page, isMobile }) => {
+  test("the bug runs away twice, is smashed on the third try and disappears", async ({ page, isMobile }) => {
     test.skip(isMobile, "the decorative bug is hidden on small screens");
     await page.goto("/");
     const counter = page.getByTitle("Hidden easter eggs found");
     const bug = page.getByRole("button", { name: "A bug. Try to catch it." });
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       await bug.hover();
       await expect(counter).toContainText("0/5");
       await page.mouse.move(0, 0);
@@ -31,7 +31,7 @@ test.describe("easter eggs", () => {
 
     await expect(page.getByRole("status")).toContainText("You fixed a bug!");
     await expect(counter).toContainText("1/5");
-    await expect(page.getByRole("button", { name: "A squashed bug. You fixed it." })).toBeVisible();
+    await expect(page.getByRole("button", { name: /bug/i })).toHaveCount(0);
   });
 
   test("visiting the 404 page counts as an egg", async ({ page }) => {
