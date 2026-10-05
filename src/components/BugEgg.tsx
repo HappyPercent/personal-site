@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useState, type CSSProperties, type MouseEvent } from "react";
 import { useEggs } from "@/components/Eggs";
 import { Icon } from "@/components/Icons";
 import styles from "./BugEgg.module.css";
@@ -11,6 +11,62 @@ export const bugFlight = [
 ] as const;
 
 const runMs = 600;
+
+const drops = [
+  { dx: -24, dy: -6, r: 2.4 },
+  { dx: -17, dy: 10, r: 1.8 },
+  { dx: -6, dy: 15, r: 2.6 },
+  { dx: 8, dy: 14, r: 1.9 },
+  { dx: 19, dy: 9, r: 2.5 },
+  { dx: 25, dy: -4, r: 2 },
+  { dx: 10, dy: -14, r: 2.2 },
+  { dx: -9, dy: -13, r: 1.7 },
+];
+
+function SmackedBug({ heading }: { heading: number }) {
+  return (
+    <svg
+      className={styles.splat}
+      width={44}
+      height={44}
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="var(--text)"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle className={styles.palm} cx="24" cy="29" r="20" fill="var(--text)" stroke="none" />
+      <ellipse className={styles.puddle} cx="24" cy="30" rx="15" ry="5" fill="var(--accent)" stroke="none" />
+      <circle className={styles.ring} cx="24" cy="29" r="6" stroke="var(--accent)" strokeWidth="2" />
+      {drops.map((d, i) => (
+        <circle
+          key={i}
+          className={styles.drop}
+          cx="24"
+          cy="29"
+          r={d.r}
+          fill="var(--accent)"
+          stroke="none"
+          style={{ "--dx": `${d.dx}px`, "--dy": `${d.dy}px` } as CSSProperties}
+        />
+      ))}
+      <g className={styles.squash}>
+        <g className={styles.twitch}>
+          <g transform={`rotate(${heading} 24 29)`}>
+            <g className={styles.legs}>
+              <path d="M15 25H8M15 33H8M33 25h7M33 33h7M21 10l-3-4M27 10l3-4" />
+            </g>
+            <ellipse cx="24" cy="29" rx="9" ry="11" fill="var(--surface-2)" />
+            <path d="M24 20v20" />
+            <circle cx="24" cy="14" r="5" stroke="var(--accent)" />
+          </g>
+        </g>
+      </g>
+    </svg>
+  );
+}
 const origin = { x: 0, y: 0 };
 
 export function BugEgg() {
@@ -52,9 +108,14 @@ export function BugEgg() {
         if (e.detail === 0) approach();
       }}
     >
-      <span className={styles.heading} style={{ transform: `rotate(${heading}deg)` }}>
-        <span className={styles.icon} onAnimationEnd={() => smashed && setGone(true)}>
-          <Icon name="bug" size={44} />
+      <span className={styles.heading} style={{ transform: smashed ? undefined : `rotate(${heading}deg)` }}>
+        <span
+          className={styles.icon}
+          onAnimationEnd={(e) => {
+            if (smashed && e.target === e.currentTarget) setGone(true);
+          }}
+        >
+          {smashed ? <SmackedBug heading={heading} /> : <Icon name="bug" size={44} />}
         </span>
       </span>
     </button>

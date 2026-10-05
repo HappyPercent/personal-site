@@ -24,14 +24,14 @@ function setup(id: (typeof eggs)[number]["id"] = "branch") {
 describe("Eggs", () => {
   it("starts at zero found", () => {
     setup();
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/4");
   });
 
   it("counts a found egg and announces it", async () => {
     setup("vim");
     await userEvent.click(screen.getByRole("button", { name: "find vim" }));
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/5");
-    expect(screen.getByRole("status")).toHaveTextContent("Easter egg found: Escaped Vim (1/5)");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/4");
+    expect(screen.getByRole("status")).toHaveTextContent("Easter egg found: Escaped Vim (1/4)");
   });
 
   it("ignores a repeat find of the same egg", async () => {
@@ -39,7 +39,7 @@ describe("Eggs", () => {
     const button = screen.getByRole("button", { name: "find branch" });
     await userEvent.click(button);
     await userEvent.click(button);
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/4");
   });
 
   it("persists found eggs to localStorage", async () => {
@@ -51,19 +51,19 @@ describe("Eggs", () => {
   it("restores found eggs on the next visit", () => {
     localStorage.setItem("eggs-found", JSON.stringify(["branch", "vim"]));
     setup();
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("2/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("2/4");
   });
 
   it("survives corrupt or unknown stored data", () => {
     localStorage.setItem("eggs-found", "not json");
     setup();
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/4");
   });
 
   it("drops stored ids that are not real eggs", () => {
     localStorage.setItem("eggs-found", JSON.stringify(["branch", "ghost"]));
     setup();
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/4");
   });
 
   it("marks the counter done once every egg is found", () => {

@@ -34,7 +34,44 @@
   animation: scurry 0.12s ease-in-out infinite alternate;
 }
 .bug[data-smashed="true"] .icon {
-  animation: smash 1.1s var(--ease) forwards;
+  animation: vanish 0.5s ease-in 1.3s forwards;
+}
+
+.splat {
+  overflow: visible;
+}
+.palm,
+.puddle,
+.ring,
+.drop,
+.squash,
+.twitch,
+.legs {
+  transform-box: view-box;
+  transform-origin: 24px 29px;
+}
+
+/* the slap lands at 0.12s; everything else keys off that */
+.palm {
+  animation: palm 0.4s ease-out both;
+}
+.puddle {
+  animation: puddle 0.3s cubic-bezier(0.1, 0.8, 0.3, 1) 0.12s both;
+}
+.ring {
+  animation: ring 0.45s ease-out 0.12s both;
+}
+.drop {
+  animation: drop 0.4s cubic-bezier(0.1, 0.8, 0.3, 1) 0.12s both;
+}
+.squash {
+  animation: squash 0.6s ease-out 0.12s both;
+}
+.twitch {
+  animation: twitch 0.5s ease-in-out 0.8s both;
+}
+.legs {
+  animation: splay 0.35s ease-out 0.12s both;
 }
 
 @keyframes scurry {
@@ -42,17 +79,51 @@
   to { transform: rotate(9deg) translateY(-1px); }
 }
 
-@keyframes smash {
-  0% { transform: scale(1) rotate(0); opacity: 1; }
-  20% { transform: scale(1.5, 0.2) rotate(-6deg); opacity: 1; }
-  35% { transform: scale(1.3, 0.28) rotate(-10deg); opacity: 1; }
-  75% { transform: scale(1.3, 0.28) rotate(-10deg); opacity: 1; }
-  100% { transform: scale(1.3, 0.28) rotate(-10deg); opacity: 0; }
+@keyframes palm {
+  0% { transform: scale(1.7); opacity: 0; }
+  30% { transform: scale(1); opacity: 0.22; }
+  45% { transform: scale(1); opacity: 0.22; }
+  100% { transform: scale(1.05); opacity: 0; }
 }
 
-@keyframes smash-fade {
-  from { opacity: 1; }
-  to { opacity: 0; }
+@keyframes puddle {
+  from { transform: scale(0.1); opacity: 0; }
+  to { transform: scale(1); opacity: 0.35; }
+}
+
+@keyframes ring {
+  from { transform: scale(1); opacity: 0.9; }
+  to { transform: scale(4.5); opacity: 0; }
+}
+
+@keyframes drop {
+  from { transform: translate(0, 0) scale(0.3); opacity: 1; }
+  to { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0.9; }
+}
+
+@keyframes squash {
+  0% { transform: scale(1, 1); }
+  18% { transform: scale(1.7, 0.12); }
+  38% { transform: scale(1.5, 0.2); }
+  60% { transform: scale(1.58, 0.17); }
+  100% { transform: scale(1.55, 0.18); }
+}
+
+@keyframes splay {
+  from { transform: scale(1); }
+  to { transform: scale(1.25, 1.4); }
+}
+
+@keyframes twitch {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(6deg); }
+  40% { transform: rotate(-5deg); }
+  60% { transform: rotate(4deg); }
+  80% { transform: rotate(-2deg); }
+}
+
+@keyframes vanish {
+  to { opacity: 0; transform: scale(0.9); }
 }
 
 @media (max-width: 900px) {
@@ -63,8 +134,14 @@
   .bug,
   .heading { transition: none; }
   .bug[data-running="true"] .icon { animation: none; }
-  .bug[data-smashed="true"] .icon {
-    transform: scale(1.3, 0.28) rotate(-10deg);
-    animation: smash-fade 0.6s linear forwards;
-  }
+  .bug[data-smashed="true"] .icon { animation: vanish 0.5s linear 0.8s forwards; }
+  .palm,
+  .ring,
+  .twitch,
+  .legs { animation: none; }
+  .palm,
+  .ring { opacity: 0; }
+  .puddle { animation: none; opacity: 0.35; }
+  .drop { animation: none; transform: translate(var(--dx), var(--dy)); opacity: 0.9; }
+  .squash { animation: none; transform: scale(1.55, 0.18); }
 }

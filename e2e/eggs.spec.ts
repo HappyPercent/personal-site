@@ -4,16 +4,16 @@ test.describe("easter eggs", () => {
   test("poking the avatar five times finds an egg and remembers it", async ({ page }) => {
     await page.goto("/");
     const counter = page.getByTitle("Hidden easter eggs found");
-    await expect(counter).toContainText("0/5");
+    await expect(counter).toContainText("0/4");
 
     const face = page.getByRole("button", { name: "Poke the avatar" });
     for (let i = 0; i < 5; i++) await face.click();
 
     await expect(page.getByRole("status")).toContainText("Avatar whisperer");
-    await expect(counter).toContainText("1/5");
+    await expect(counter).toContainText("1/4");
 
     await page.reload();
-    await expect(page.getByTitle("Hidden easter eggs found")).toContainText("1/5");
+    await expect(page.getByTitle("Hidden easter eggs found")).toContainText("1/4");
   });
 
   test("the bug runs away twice, is smashed on the third try and disappears", async ({ page, isMobile }) => {
@@ -33,21 +33,13 @@ test.describe("easter eggs", () => {
       await approach();
       await expect(bug).toHaveAttribute("data-running", "true");
       await expect(bug).toHaveAttribute("data-running", "false");
-      await expect(counter).toContainText("0/5");
+      await expect(counter).toContainText("0/4");
       await page.mouse.move(0, 0);
     }
     await approach();
 
     await expect(page.getByRole("status")).toContainText("You fixed a bug!");
-    await expect(counter).toContainText("1/5");
+    await expect(counter).toContainText("1/4");
     await expect(page.getByRole("button", { name: /bug/i })).toHaveCount(0);
-  });
-
-  test("visiting the 404 page counts as an egg", async ({ page }) => {
-    await page.goto("/this-page-does-not-exist");
-    await expect(page.getByRole("status")).toContainText("You made it this far, I am impressed");
-
-    await page.getByRole("link", { name: "Back to the CV" }).click();
-    await expect(page.getByTitle("Hidden easter eggs found")).toContainText("1/5");
   });
 });

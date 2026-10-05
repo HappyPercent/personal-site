@@ -33,13 +33,13 @@ describe("BugEgg", () => {
       await approach(bug);
       expect(bug).toHaveStyle({ transform: `translate(${spot.x}px, ${spot.y}px)` });
     }
-    expect(counter()).toHaveTextContent("0/5");
+    expect(counter()).toHaveTextContent("0/4");
   });
 
   it("is smashed on the third approach and counts as an egg", async () => {
     const bug = setup();
     for (let i = 0; i < 3; i++) await approach(bug);
-    expect(counter()).toHaveTextContent("1/5");
+    expect(counter()).toHaveTextContent("1/4");
     expect(screen.getByRole("status")).toHaveTextContent("You fixed a bug!");
     expect(screen.getByRole("button", { name: "A squashed bug. You fixed it." })).toHaveAttribute("data-smashed", "true");
   });
@@ -47,7 +47,7 @@ describe("BugEgg", () => {
   it("stays smashed and does not count twice", async () => {
     const bug = setup();
     for (let i = 0; i < 8; i++) await approach(bug);
-    expect(counter()).toHaveTextContent("1/5");
+    expect(counter()).toHaveTextContent("1/4");
     expect(JSON.parse(localStorage.getItem("eggs-found") ?? "[]")).toEqual(["bug"]);
   });
 
@@ -74,6 +74,6 @@ describe("BugEgg", () => {
     const bug = setup();
     bug.focus();
     for (let i = 0; i < 3; i++) await userEvent.keyboard("{Enter}");
-    expect(counter()).toHaveTextContent("1/5");
+    expect(counter()).toHaveTextContent("1/4");
   });
 });

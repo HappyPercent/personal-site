@@ -23,13 +23,13 @@ describe("Avatar", () => {
   it("does not reward fewer than five pokes", async () => {
     const face = setup();
     for (let i = 0; i < 4; i++) await userEvent.click(face);
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("0/4");
   });
 
   it("rewards the fifth poke exactly once", async () => {
     const face = setup();
     for (let i = 0; i < 12; i++) await userEvent.click(face);
-    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/5");
+    expect(screen.getByTitle("Hidden easter eggs found")).toHaveTextContent("1/4");
     expect(JSON.parse(localStorage.getItem("eggs-found") ?? "[]")).toEqual(["avatar"]);
   });
 
