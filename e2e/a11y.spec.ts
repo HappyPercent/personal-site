@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-for (const path of ["/", "/this-page-does-not-exist"]) {
+for (const path of ["/", "/wall", "/this-page-does-not-exist"]) {
   test(`${path} has no serious accessibility violations`, async ({ page }) => {
     await page.goto(path);
     await page.locator("main").waitFor();

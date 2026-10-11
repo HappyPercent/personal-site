@@ -20,6 +20,7 @@ export default defineConfig({
   webServer: {
     command: `npm run start -- -p ${PORT}`,
     url: `http://localhost:${PORT}`,
+    env: { WALL_DB: ":memory:" },
     reuseExistingServer: !process.env.CI,
     timeout: 60_000,
   },

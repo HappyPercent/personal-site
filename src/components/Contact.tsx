@@ -4,7 +4,7 @@ import { Section, Wrap } from "@/components/Section";
 import { cx } from "@/lib/cx";
 import styles from "./Contact.module.css";
 
-const upcoming = ["Play my life", "The wall"];
+const upcoming = ["Play my life"];
 
 export function Contact() {
   return (

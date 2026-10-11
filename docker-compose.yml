@@ -4,6 +4,10 @@ services:
     build: .
     restart: unless-stopped
     read_only: true
+    environment:
+      WALL_DB: /data/wall.db
+    volumes:
+      - wall-data:/data
     tmpfs:
       - /tmp
       - /app/.next/cache
@@ -81,3 +85,4 @@ networks:
 
 volumes:
   umami-db: {}
+  wall-data: {}
