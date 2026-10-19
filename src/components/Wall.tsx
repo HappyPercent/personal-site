@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent, type PointerEvent } from "react";
-import { MAX_NOTE_LENGTH, WORLD } from "@/lib/wall-rules";
+import { MAX_NOTE_LENGTH, NOTE_SIZE, WORLD } from "@/lib/wall-rules";
 import type { Note } from "@/lib/wall-store";
 import styles from "./Wall.module.css";
 
@@ -13,6 +13,11 @@ export function clampPan(pan: Pan, view: View): Pan {
   const clamp = (v: number, viewSize: number, worldSize: number) =>
     worldSize <= viewSize ? (viewSize - worldSize) / 2 : Math.min(0, Math.max(viewSize - worldSize, v));
   return { x: clamp(pan.x, view.w, WORLD.w), y: clamp(pan.y, view.h, WORLD.h) };
+}
+
+/** Pan that puts a note (top-left at x, y) in the middle of the view. */
+export function centerOn(x: number, y: number, view: View): Pan {
+  return clampPan({ x: view.w / 2 - x - NOTE_SIZE.w / 2, y: view.h / 2 - y - NOTE_SIZE.h / 2 }, view);
 }
 
 const sizeOf = (el: HTMLElement): View => ({ w: el.clientWidth, h: el.clientHeight });
@@ -26,7 +31,11 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
   const [sending, setSending] = useState(false);
   const [pan, setPan] = useState<Pan>({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
+  const [glide, setGlide] = useState(false);
   const viewRef = useRef<HTMLDivElement>(null);
+  // The spot kept in the middle of the view until the visitor pans by hand.
+  // New notes cluster around the middle of the world, so start there.
+  const focus = useRef<{ x: number; y: number } | null>({ x: (WORLD.w - NOTE_SIZE.w) / 2, y: (WORLD.h - NOTE_SIZE.h) / 2 });
   const drag = useRef<{ px: number; py: number; start: Pan } | null>(null);
 
   function addOnce(note: Note) {
@@ -51,14 +60,21 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
   useEffect(() => {
     const el = viewRef.current;
     if (!el) return;
-    const fit = () => setPan((p) => clampPan(p, sizeOf(el)));
-    fit();
-    window.addEventListener("resize", fit);
-    return () => window.removeEventListener("resize", fit);
+    // Sizes can change after first paint (late styles, rotation), so keep re-fitting.
+    const fit = () => {
+      const view = sizeOf(el);
+      const f = focus.current;
+      setPan((p) => (f ? centerOn(f.x, f.y, view) : clampPan(p, view)));
+    };
+    const observer = new ResizeObserver(fit);
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
     drag.current = { px: e.clientX, py: e.clientY, start: pan };
+    focus.current = null;
+    setGlide(false);
     setDragging(true);
     e.currentTarget.setPointerCapture(e.pointerId);
   }
@@ -97,8 +113,9 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
       setText("");
       const el = viewRef.current;
       if (el) {
-        const view = sizeOf(el);
-        setPan(clampPan({ x: view.w / 2 - note.x - 110, y: view.h / 2 - note.y - 85 }, view));
+        focus.current = note;
+        setGlide(true);
+        setPan(centerOn(note.x, note.y, sizeOf(el)));
       }
     } catch {
       setError("Could not reach the wall. Try again.");
@@ -130,7 +147,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <ul className={styles.world} style={{ width: WORLD.w, height: WORLD.h, transform: `translate(${pan.x}px, ${pan.y}px)` }}>
+        <ul className={styles.world} data-glide={glide} onTransitionEnd={() => setGlide(false)} style={{ width: WORLD.w, height: WORLD.h, transform: `translate(${pan.x}px, ${pan.y}px)` }}>
           {notes.map((n) => (
             <li key={n.id} className={styles.note} style={{ left: n.x, top: n.y, background: n.color, transform: `rotate(${n.r}deg)` }}>
               {n.text}
@@ -152,7 +169,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
           maxLength={MAX_NOTE_LENGTH}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Say hi, or a joke about tabs vs spaces"
+          placeholder="Say hello"
         />
         <div className={styles.formRow}>
           <span className={`mono dim ${styles.count}`}>

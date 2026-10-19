@@ -40,14 +40,37 @@ describe("checkNote profanity", () => {
 });
 
 describe("placeNote", () => {
-  it("keeps notes inside the world at both extremes", () => {
-    for (const rand of [() => 0, () => 0.999]) {
-      const p = placeNote(rand);
+  const overlaps = (a: { x: number; y: number }, b: { x: number; y: number }) =>
+    Math.abs(a.x - b.x) < NOTE_SIZE.w && Math.abs(a.y - b.y) < NOTE_SIZE.h;
+
+  it("puts the first note in the middle of the world", () => {
+    const p = placeNote([], () => 0.5);
+    expect(p.x).toBe((WORLD.w - NOTE_SIZE.w) / 2);
+    expect(p.y).toBe((WORLD.h - NOTE_SIZE.h) / 2);
+  });
+
+  it("packs notes next to each other without overlap, all inside the world", () => {
+    const taken: { x: number; y: number }[] = [];
+    for (let i = 0; i < 20; i++) {
+      const p = placeNote(taken, () => (i * 0.37) % 1);
+      expect(taken.some((t) => overlaps(t, p))).toBe(false);
       expect(p.x).toBeGreaterThanOrEqual(0);
       expect(p.y).toBeGreaterThanOrEqual(0);
       expect(p.x + NOTE_SIZE.w).toBeLessThanOrEqual(WORLD.w);
       expect(p.y + NOTE_SIZE.h).toBeLessThanOrEqual(WORLD.h);
       expect(Math.abs(p.r)).toBeLessThanOrEqual(4);
+      taken.push(p);
     }
+    // A tight cluster: the second note sits right beside the first, not across the world.
+    const [first, second] = taken;
+    expect(Math.hypot(first.x - second.x, first.y - second.y)).toBeLessThan(NOTE_SIZE.w * 1.5);
+  });
+
+  it("still places a note when the wall is full", () => {
+    const full = [];
+    for (let x = 0; x < WORLD.w; x += 50) for (let y = 0; y < WORLD.h; y += 50) full.push({ x, y });
+    const p = placeNote(full, () => 0.5);
+    expect(p.x + NOTE_SIZE.w).toBeLessThanOrEqual(WORLD.w);
+    expect(p.y + NOTE_SIZE.h).toBeLessThanOrEqual(WORLD.h);
   });
 });

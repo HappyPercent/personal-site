@@ -23,12 +23,43 @@ export function checkNote(input: unknown): NoteCheck {
 }
 
 export type Placement = { x: number; y: number; r: number; color: string };
+type Spot = { x: number; y: number };
 
-/** Pass `rand` (0..1) so tests can be deterministic. */
-export function placeNote(rand: () => number = Math.random): Placement {
+const BOUNDS = { minX: 60, minY: 120, maxX: WORLD.w - NOTE_SIZE.w - 60, maxY: WORLD.h - NOTE_SIZE.h - 60 };
+const GAP = 14;
+const STEP = 30;
+
+const inBounds = (s: Spot) => s.x >= BOUNDS.minX && s.x <= BOUNDS.maxX && s.y >= BOUNDS.minY && s.y <= BOUNDS.maxY;
+const isFree = (s: Spot, taken: Spot[]) =>
+  taken.every((t) => Math.abs(t.x - s.x) >= NOTE_SIZE.w + GAP || Math.abs(t.y - s.y) >= NOTE_SIZE.h + GAP);
+
+/** Nearest free spot to the middle of the world, walking outwards ring by ring. */
+function findSpot(taken: Spot[], rand: () => number): Spot {
+  const cx = (WORLD.w - NOTE_SIZE.w) / 2;
+  const cy = (WORLD.h - NOTE_SIZE.h) / 2;
+  // Stretch the rings sideways so the cluster grows in the world's shape.
+  const stretch = WORLD.w / WORLD.h;
+  for (let ring = 0; ring * STEP <= cx; ring++) {
+    const radius = ring * STEP;
+    const samples = Math.max(1, Math.floor((2 * Math.PI * radius) / STEP));
+    const offset = rand() * 2 * Math.PI;
+    for (let i = 0; i < samples; i++) {
+      const a = offset + (i / samples) * 2 * Math.PI;
+      const spot = { x: Math.round(cx + Math.cos(a) * radius), y: Math.round(cy + (Math.sin(a) * radius) / stretch) };
+      if (inBounds(spot) && isFree(spot, taken)) return spot;
+    }
+  }
+  // The wall is full: overlap somewhere random.
   return {
-    x: Math.round(60 + rand() * (WORLD.w - NOTE_SIZE.w - 120)),
-    y: Math.round(120 + rand() * (WORLD.h - NOTE_SIZE.h - 180)),
+    x: Math.round(BOUNDS.minX + rand() * (BOUNDS.maxX - BOUNDS.minX)),
+    y: Math.round(BOUNDS.minY + rand() * (BOUNDS.maxY - BOUNDS.minY)),
+  };
+}
+
+/** `taken` are positions of notes already on the wall. Pass `rand` (0..1) so tests can be deterministic. */
+export function placeNote(taken: Spot[] = [], rand: () => number = Math.random): Placement {
+  return {
+    ...findSpot(taken, rand),
     r: Math.round((rand() * 8 - 4) * 10) / 10,
     color: COLORS[Math.floor(rand() * COLORS.length)],
   };

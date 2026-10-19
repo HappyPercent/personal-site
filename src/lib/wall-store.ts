@@ -69,7 +69,8 @@ export function countNotes(): number {
 
 export function addNote(text: string): Note {
   const { db, events } = store();
-  const p = placeNote();
+  const taken = db.prepare("SELECT x, y FROM notes WHERE hidden = 0").all() as { x: number; y: number }[];
+  const p = placeNote(taken);
   const createdAt = Date.now();
   const res = db
     .prepare("INSERT INTO notes (text, x, y, r, color, created_at) VALUES (?, ?, ?, ?, ?, ?)")

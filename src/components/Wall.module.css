@@ -55,6 +55,11 @@
   list-style: none;
   will-change: transform;
 }
+/* Glide only to a note just posted; panning by hand and resizing stay instant. */
+.world[data-glide="true"] { transition: transform 0.5s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .world[data-glide="true"] { transition: none; }
+}
 
 .note {
   position: absolute;
