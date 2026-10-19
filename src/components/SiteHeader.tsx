@@ -14,12 +14,12 @@ export function SiteHeader() {
         <a href="#netchex" className={styles.link}>
           CV
         </a>
-        <span className={styles.soon}>
-          Play my life <span className="mono accent small">soon</span>
-        </span>
         <Link href="/wall" className={styles.link}>
           The wall
         </Link>
+        <span className={styles.soon}>
+          Play my life <span className="mono accent small">soon</span>
+        </span>
         <EggCounter />
         <DrawerButton />
       </Wrap>
