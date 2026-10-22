@@ -8,19 +8,74 @@ import styles from "./Wall.module.css";
 
 type Pan = { x: number; y: number };
 type View = { w: number; h: number };
+/** The part of the view no overlay covers: `top` px down from the view's top edge, `w` by `h`. */
+type Area = View & { top: number };
+type Spot = { x: number; y: number };
 
-export function clampPan(pan: Pan, view: View): Pan {
+export function clampPan(pan: Pan, view: View, scale = 1): Pan {
   const clamp = (v: number, viewSize: number, worldSize: number) =>
     worldSize <= viewSize ? (viewSize - worldSize) / 2 : Math.min(0, Math.max(viewSize - worldSize, v));
-  return { x: clamp(pan.x, view.w, WORLD.w), y: clamp(pan.y, view.h, WORLD.h) };
+  return { x: clamp(pan.x, view.w, WORLD.w * scale), y: clamp(pan.y, view.h, WORLD.h * scale) };
 }
 
-/** Pan that puts a note (top-left at x, y) in the middle of the view. */
-export function centerOn(x: number, y: number, view: View): Pan {
-  return clampPan({ x: view.w / 2 - x - NOTE_SIZE.w / 2, y: view.h / 2 - y - NOTE_SIZE.h / 2 }, view);
+/** Pan that puts a world point (cx, cy) in the middle of the open area. */
+function panTo(cx: number, cy: number, view: View, open: Area, scale: number): Pan {
+  return clampPan({ x: open.w / 2 - cx * scale, y: open.top + open.h / 2 - cy * scale }, view, scale);
+}
+
+/** Pan that puts a note (top-left at x, y) in the middle of the open part of the view. */
+export function centerOn(x: number, y: number, view: View, open: Area = { ...view, top: 0 }, scale = 1): Pan {
+  return panTo(x + NOTE_SIZE.w / 2, y + NOTE_SIZE.h / 2, view, open, scale);
+}
+
+// Zoomed out any further, note text drops below a readable size.
+export const MIN_SCALE = 0.6;
+const FIT_MARGIN = 48;
+
+/**
+ * Zoom and pan for the first look: every note in the open area when that fits at MIN_SCALE or larger.
+ * When it doesn't, frame the window that holds the most notes, preferring newer ones on a tie.
+ */
+export function fitAll(notes: Spot[], view: View, open: Area = { ...view, top: 0 }): { pan: Pan; scale: number } {
+  if (notes.length === 0) return { pan: centerOn((WORLD.w - NOTE_SIZE.w) / 2, (WORLD.h - NOTE_SIZE.h) / 2, view, open), scale: 1 };
+  const left = Math.min(...notes.map((n) => n.x)) - FIT_MARGIN;
+  const top = Math.min(...notes.map((n) => n.y)) - FIT_MARGIN;
+  const right = Math.max(...notes.map((n) => n.x)) + NOTE_SIZE.w + FIT_MARGIN;
+  const bottom = Math.max(...notes.map((n) => n.y)) + NOTE_SIZE.h + FIT_MARGIN;
+  const fit = Math.min(open.w / (right - left), open.h / (bottom - top));
+  if (fit >= MIN_SCALE) {
+    const scale = Math.min(1, fit);
+    return { pan: panTo((left + right) / 2, (top + bottom) / 2, view, open, scale), scale };
+  }
+  // A window of the open area's size in world units, centred on each note in turn.
+  const halfW = open.w / MIN_SCALE / 2;
+  const halfH = open.h / MIN_SCALE / 2;
+  const centre = (n: Spot) => ({ x: n.x + NOTE_SIZE.w / 2, y: n.y + NOTE_SIZE.h / 2 });
+  let best = centre(notes[notes.length - 1]);
+  let bestCount = 0;
+  for (const n of [...notes].reverse()) {
+    const c = centre(n);
+    const count = notes.filter((m) => {
+      const o = centre(m);
+      return Math.abs(o.x - c.x) <= halfW - NOTE_SIZE.w / 2 && Math.abs(o.y - c.y) <= halfH - NOTE_SIZE.h / 2;
+    }).length;
+    if (count > bestCount) {
+      best = c;
+      bestCount = count;
+    }
+  }
+  return { pan: panTo(best.x, best.y, view, open, MIN_SCALE), scale: MIN_SCALE };
 }
 
 const sizeOf = (el: HTMLElement): View => ({ w: el.clientWidth, h: el.clientHeight });
+
+// Notes are framed below the header and, on phones, above the form that spans the bottom of the screen.
+function openArea(view: HTMLElement, header: HTMLElement | null, form: HTMLElement | null): Area {
+  const size = sizeOf(view);
+  const top = header?.offsetHeight ?? 0;
+  const bottom = form && form.offsetWidth >= size.w * 0.6 ? form.offsetTop : size.h;
+  return { top, w: size.w, h: Math.max(NOTE_SIZE.h, bottom - top) };
+}
 
 export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; initialTotal: number }) {
   const [notes, setNotes] = useState(initialNotes);
@@ -32,10 +87,14 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
   const [pan, setPan] = useState<Pan>({ x: 0, y: 0 });
   const [dragging, setDragging] = useState(false);
   const [glide, setGlide] = useState(false);
+  const [scale, setScale] = useState(1);
   const viewRef = useRef<HTMLDivElement>(null);
-  // The spot kept in the middle of the view until the visitor pans by hand.
-  // New notes cluster around the middle of the world, so start there.
-  const focus = useRef<{ x: number; y: number } | null>({ x: (WORLD.w - NOTE_SIZE.w) / 2, y: (WORLD.h - NOTE_SIZE.h) / 2 });
+  const formRef = useRef<HTMLFormElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  // What the view keeps framed until the visitor pans by hand: every note on load, then a just-posted one.
+  const focus = useRef<"all" | { x: number; y: number } | null>("all");
+  const scaleRef = useRef(1);
+  const initialRef = useRef(initialNotes);
   const drag = useRef<{ px: number; py: number; start: Pan } | null>(null);
 
   function addOnce(note: Note) {
@@ -63,8 +122,17 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
     // Sizes can change after first paint (late styles, rotation), so keep re-fitting.
     const fit = () => {
       const view = sizeOf(el);
+      const open = openArea(el, headerRef.current, formRef.current);
       const f = focus.current;
-      setPan((p) => (f ? centerOn(f.x, f.y, view) : clampPan(p, view)));
+      if (f === "all") {
+        const framed = fitAll(initialRef.current, view, open);
+        scaleRef.current = framed.scale;
+        setScale(framed.scale);
+        setPan(framed.pan);
+        return;
+      }
+      const s = scaleRef.current;
+      setPan((p) => (f ? centerOn(f.x, f.y, view, open, s) : clampPan(p, view, s)));
     };
     const observer = new ResizeObserver(fit);
     observer.observe(el);
@@ -83,7 +151,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
     const d = drag.current;
     const el = viewRef.current;
     if (!d || !el) return;
-    setPan(clampPan({ x: d.start.x + e.clientX - d.px, y: d.start.y + e.clientY - d.py }, sizeOf(el)));
+    setPan(clampPan({ x: d.start.x + e.clientX - d.px, y: d.start.y + e.clientY - d.py }, sizeOf(el), scale));
   }
 
   function endDrag() {
@@ -104,7 +172,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
       });
       const data = (await res.json()) as { error?: string; note?: Note; total?: number };
       if (!res.ok || !data.note) {
-        setError(data.error ?? "Something went wrong.");
+        setError(data.error ?? "The wall didn't take that note. Try again in a moment.");
         return;
       }
       const note = data.note;
@@ -115,7 +183,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
       if (el) {
         focus.current = note;
         setGlide(true);
-        setPan(centerOn(note.x, note.y, sizeOf(el)));
+        setPan(centerOn(note.x, note.y, sizeOf(el), openArea(el, headerRef.current, formRef.current), scale));
       }
     } catch {
       setError("Could not reach the wall. Try again.");
@@ -126,7 +194,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
+      <header ref={headerRef} className={styles.header}>
         <Link href="/" className={styles.logo}>
           andrey<span className="accent">.</span>erofteev <span className={`mono dim ${styles.sub}`}>/ the wall</span>
         </Link>
@@ -147,7 +215,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
         onPointerUp={endDrag}
         onPointerCancel={endDrag}
       >
-        <ul className={styles.world} data-glide={glide} onTransitionEnd={() => setGlide(false)} style={{ width: WORLD.w, height: WORLD.h, transform: `translate(${pan.x}px, ${pan.y}px)` }}>
+        <ul className={styles.world} data-glide={glide} onTransitionEnd={() => setGlide(false)} style={{ width: WORLD.w, height: WORLD.h, transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}>
           {notes.map((n) => (
             <li key={n.id} className={styles.note} style={{ left: n.x, top: n.y, background: n.color, transform: `rotate(${n.r}deg)` }}>
               {n.text}
@@ -159,7 +227,7 @@ export function Wall({ initialNotes, initialTotal }: { initialNotes: Note[]; ini
         </ul>
       </div>
 
-      <form className={styles.form} onSubmit={submit}>
+      <form ref={formRef} className={styles.form} onSubmit={submit}>
         <label htmlFor="note-text" className={styles.formTitle}>
           Leave a note
         </label>

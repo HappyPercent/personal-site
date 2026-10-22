@@ -31,7 +31,14 @@ describe("checkNote profanity", () => {
     },
   );
 
-  it.each(["Hello there!", "This hit the spot", "Great class, assassin game", "Scunthorpe is lovely", "Nice site. Hire this person.", "I will skill you up", "Hello from Essex"])(
+  it.each(["kill me", "Just KILL ME now", "I want to kill myself", "kms", "thinking about suicide", "I wanna die", "going to end my life", "self-harm", "self harm", "k i l l me", "killing myself", "cutting myself", "unalive"])(
+    "rejects self-harm talk: %s",
+    (text) => {
+      expect(checkNote(text).ok).toBe(false);
+    },
+  );
+
+  it.each(["Hello there!", "This hit the spot", "Great class, assassin game", "Scunthorpe is lovely", "Nice site. Hire this person.", "I will skill you up", "Hello from Essex", "Teach me the skill, merci", "This killed it, nice work", "Selfie with the wall", "The end of my life's work? No, just v1"])(
     "allows %s",
     (text) => {
       expect(checkNote(text).ok).toBe(true);

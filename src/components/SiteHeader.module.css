@@ -5,28 +5,50 @@
   z-index: 10;
 }
 
+/* Fades the page out under the header so the logo never sits on top of copy. */
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 112px;
+  background: linear-gradient(to bottom, var(--bg) 45%, transparent);
+  pointer-events: none;
+}
+
 .header .row {
   display: flex;
   align-items: center;
   gap: 32px;
   padding-top: 28px;
   padding-bottom: 28px;
-  font-size: 15px;
+  font-size: var(--fs-sm);
 }
 
 .logo {
   font-weight: 800;
-  font-size: 22px;
+  font-size: var(--fs-xl);
   letter-spacing: -0.02em;
-  flex-grow: 1;
+  /* Push the links right without stretching the logo's hit area across the header. */
+  margin-right: auto;
 }
 
-.soon {
-  color: var(--dim);
+.counter {
+  display: contents;
 }
 
 @media (max-width: 900px) {
-  .header .row { gap: 16px; padding-top: 20px; padding-bottom: 20px; }
+  .header::before { height: 92px; }
+  .header .row { gap: 12px; padding-top: 20px; padding-bottom: 20px; }
+  .logo { font-size: var(--fs-md); }
+  /* The wall moves into the drawer on phones, and two of the eggs need a mouse. The CV stays. */
   .link,
-  .soon { display: none; }
+  .counter { display: none; }
+  .cv {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    justify-content: center;
+    min-width: 44px;
+    font-weight: 600;
+  }
 }

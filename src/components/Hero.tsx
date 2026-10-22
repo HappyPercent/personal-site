@@ -10,7 +10,6 @@ import styles from "./Hero.module.css";
 export function Hero() {
   return (
     <Section id="hero">
-      <BranchDrag />
       <Wrap className={styles.grid}>
         <div className={styles.stack}>
           <div className="rv mono live">● {profile.status}</div>
@@ -27,7 +26,6 @@ export function Hero() {
           <div className="rv d3">
             <Actions />
           </div>
-          <div className="rv d4 mono dim small">↓ scroll</div>
         </div>
         <div className={`rv d2 ${styles.avatarWrap}`}>
           <div className={styles.avatarCard}>
@@ -35,6 +33,8 @@ export function Hero() {
           </div>
         </div>
       </Wrap>
+      {/* After the content so the hidden egg comes last in the tab order. */}
+      <BranchDrag />
     </Section>
   );
 }

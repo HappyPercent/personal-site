@@ -4,7 +4,7 @@
   bottom: 0;
   width: min(360px, 38vw);
   color: var(--line-2);
-  opacity: 0.5;
+  opacity: 0.3;
   z-index: 0;
   pointer-events: none;
 }
@@ -41,11 +41,22 @@
 }
 
 @media (max-width: 900px) {
-  .tree { opacity: 0.3; }
+  .tree { opacity: 0.2; }
   .drag { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .merged,
   .drag { transition: none; }
+}
+
+/* The tree is the hero's scenery; past it, even faint, it crosses career dates and copy. */
+:global([data-section]:not([data-section="hero"])) .tree {
+  opacity: 0;
+}
+.tree {
+  transition: opacity 0.4s var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tree { transition: none; }
 }

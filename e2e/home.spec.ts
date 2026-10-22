@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const panelOrder = ["hero", "numbers", "netchex", "stenn-lead", "stenn", "aori", "before", "tools", "contact"];
+const panelOrder = ["hero", "numbers", "proof", "netchex", "stenn", "aori", "before", "tools", "contact"];
 
 test.describe("home page", () => {
   test.beforeEach(async ({ page }) => {
@@ -21,14 +21,25 @@ test.describe("home page", () => {
     expect(ids).toEqual(panelOrder);
   });
 
-  test("splits Stenn into a management screen and a frontend screen", async ({ page }) => {
-    await expect(page.locator("#stenn-lead")).toContainText("Engineering Manager");
-    await expect(page.locator("#stenn")).toContainText("Senior Frontend Developer");
-    await expect(page.locator("#stenn-lead")).not.toContainText("Senior Frontend Developer");
+  test("tells the Stenn story on one screen, manager first, promoted from frontend", async ({ page }) => {
+    const stenn = page.locator("#stenn");
+    await expect(stenn.getByRole("heading", { level: 2 })).toHaveText("Engineering Manager");
+    await expect(stenn.getByRole("heading", { level: 3 })).toHaveText("Senior Frontend Developer");
+    await expect(stenn).toContainText("Promoted from");
+    await expect(page.locator("#stenn-lead")).toHaveCount(0);
+  });
+
+  test("puts the proof of craft in the main flow", async ({ page }) => {
+    const proof = page.locator("#proof");
+    await expect(proof.getByRole("heading", { level: 2 })).toHaveText("This site is my code sample.");
+    await expect(proof.getByRole("link", { name: /source on GitHub/ })).toHaveAttribute(
+      "href",
+      "https://github.com/HappyPercent/personal-site",
+    );
   });
 
   test("puts each pre-code role on its own line", async ({ page }) => {
-    const lines = page.locator("#before h2 > span");
+    const lines = page.locator("#before ul > li");
     await expect(lines).toHaveCount(3);
   });
 

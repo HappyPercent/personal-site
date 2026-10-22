@@ -25,18 +25,9 @@
   background: var(--surface-2);
   border-radius: 999px;
   padding: 6px 14px;
-  font-size: 15px;
-  transition: transform 0.15s ease-out, background 0.15s ease-out;
-}
-.chip:hover {
-  transform: translateY(-2px) rotate(-2deg);
-  background: var(--line);
+  font-size: var(--fs-sm);
 }
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .chip { transition: none; }
 }

@@ -13,7 +13,7 @@
 
 .title {
   margin: 0;
-  font-size: clamp(36px, 4.4vw, 62px);
+  font-size: var(--fs-display);
   line-height: 0.98;
   font-weight: 800;
   letter-spacing: -0.035em;
@@ -33,4 +33,7 @@
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
+  /* 320px of portrait plus padding is wider than a phone column. */
+  .avatarCard { border-radius: 36px; padding: 16px 16px 8px; }
+  .avatarCard svg { width: min(240px, 60vw); height: auto; }
 }

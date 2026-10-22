@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 13px;
+  font-size: var(--fs-xs);
   color: var(--dim);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -23,7 +23,7 @@
   background: var(--text);
   color: var(--bg);
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  font-size: var(--fs-xs);
   padding: 12px 18px;
   border-radius: 12px;
   opacity: 0;

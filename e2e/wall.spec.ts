@@ -41,9 +41,9 @@ test.describe("the wall", () => {
   });
 
   test("is reachable from the home page header", async ({ page, isMobile }) => {
-    test.skip(isMobile, "header links are hidden on small screens");
+    test.skip(isMobile, "the wall link is hidden from the header on small screens");
     await page.goto("/");
-    await page.getByRole("link", { name: "The wall" }).click();
+    await page.locator("header").getByRole("link", { name: "The wall", exact: true }).click();
     await expect(page).toHaveURL(/\/wall$/);
   });
 });

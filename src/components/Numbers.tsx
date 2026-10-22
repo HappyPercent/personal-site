@@ -10,7 +10,7 @@ export function Numbers() {
   return (
     <Section id="numbers">
       <Wrap>
-        <div className="rv mono live">01 · THE NUMBERS</div>
+        <div className="rv mono live">THE NUMBERS</div>
         <h2 className={cx("rv d1", shared.bigTitle)}>What I can say out loud.</h2>
         <div className={styles.grid}>
           {stats.map((s, i) => (

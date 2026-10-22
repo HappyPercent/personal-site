@@ -2,6 +2,7 @@ import Link from "next/link";
 import { DrawerButton } from "@/components/Drawer";
 import { EggCounter } from "@/components/Eggs";
 import { Wrap } from "@/components/Section";
+import { profile } from "@/content/profile";
 import styles from "./SiteHeader.module.css";
 
 export function SiteHeader() {
@@ -11,16 +12,15 @@ export function SiteHeader() {
         <a href="#hero" className={styles.logo}>
           andrey<span className="accent">.</span>erofteev
         </a>
-        <a href="#netchex" className={styles.link}>
+        <a href={profile.cvHref} download className={`${styles.link} ${styles.cv}`}>
           CV
         </a>
         <Link href="/wall" className={styles.link}>
           The wall
         </Link>
-        <span className={styles.soon}>
-          Play my life <span className="mono accent small">soon</span>
+        <span className={styles.counter}>
+          <EggCounter />
         </span>
-        <EggCounter />
         <DrawerButton />
       </Wrap>
     </header>

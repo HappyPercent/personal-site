@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { joke } from "@/content/jokes";
+import { profile } from "@/content/profile";
 import styles from "./Drawer.module.css";
 
-const K = ({ children }: { children: ReactNode }) => <span className="accent">{children}</span>;
+// Keywords are emphasis, not links, so they stay out of the accent colour.
+const K = ({ children }: { children: ReactNode }) => <strong className={styles.k}>{children}</strong>;
 
 const rows: [string, ReactNode][] = [
   ["FRAMEWORK", <><K>Next.js</K> and strict <K>TypeScript</K>, deployed as a small standalone <K>Docker</K> image.</>],
@@ -17,47 +21,75 @@ const rows: [string, ReactNode][] = [
   ["ANALYTICS", <><K>Umami</K>, self-hosted on the same home server. Page views only, no personal data. {joke("no-cookies")}</>],
 ];
 
+const noop = () => () => {};
+const useMounted = () => useSyncExternalStore(noop, () => true, () => false);
+
 export function DrawerButton() {
   const [open, setOpen] = useState(false);
+  const mounted = useMounted();
+  const pillRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
     closeRef.current?.focus();
+    // Everything outside the drawer goes inert, so Tab can't leave the dialog.
+    const outside = [...document.body.children].filter(
+      (el): el is HTMLElement => el instanceof HTMLElement && el !== wrapRef.current && !el.inert,
+    );
+    outside.forEach((el) => (el.inert = true));
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    const pill = pillRef.current;
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      outside.forEach((el) => (el.inert = false));
+      pill?.focus();
+    };
   }, [open]);
+
+  const drawer = (
+    <div ref={wrapRef} className={styles.wrap} data-open={open} inert={!open}>
+      <div className={styles.scrim} onClick={() => setOpen(false)} />
+      <div className={styles.drawer} role="dialog" aria-modal="true" aria-label="How this page is built" aria-hidden={!open}>
+        <div className={styles.top}>
+          <div className="mono live">{"{ how it's done }"}</div>
+          <button ref={closeRef} type="button" className={styles.close} aria-label="Close drawer" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
+            ×
+          </button>
+        </div>
+        {/* The pitch lives in the "This site" section; the drawer is the stack behind it. */}
+        <h2 className={styles.heading}>The stack, layer by layer.</h2>
+        <p className="muted">Every part of this page, from the framework to the server it runs on.</p>
+        <div className={styles.links}>
+          <a href={profile.source} className={styles.link} rel="noopener">
+            Read the source on GitHub <span aria-hidden="true">↗</span>
+          </a>
+          <Link href="/wall" className={styles.link}>
+            Leave a note on the wall <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <div className={styles.rows}>
+          {rows.map(([k, v]) => (
+            <div key={k} className={styles.row}>
+              <div className={`mono dim ${styles.key}`}>{k}</div>
+              <div>{v}</div>
+            </div>
+          ))}
+        </div>
+        <div className={`mono ${styles.joke}`}>{`// ${joke("cocoa")}`}</div>
+      </div>
+    </div>
+  );
 
   return (
     <>
-      <button type="button" className={styles.pill} onClick={() => setOpen(true)}>
-        {"{ how it's done }"}
+      <button ref={pillRef} type="button" className={styles.pill} onClick={() => setOpen(true)}>
+        How it&apos;s built
       </button>
-      <div className={styles.wrap} data-open={open}>
-        <div className={styles.scrim} onClick={() => setOpen(false)} />
-        <aside className={styles.drawer} role="dialog" aria-modal="true" aria-label="How this page is built" aria-hidden={!open}>
-          <div className={styles.top}>
-            <div className="mono live">{"{ how it's done }"}</div>
-            <button ref={closeRef} type="button" className={styles.close} aria-label="Close drawer" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
-              ×
-            </button>
-          </div>
-          <h2 className={styles.heading}>This page is also the portfolio.</h2>
-          <p className="muted">
-            My day-job code is behind NDAs, so I built this instead. Everything here is open source, and everything below is real.
-          </p>
-          <div className={styles.rows}>
-            {rows.map(([k, v]) => (
-              <div key={k} className={styles.row}>
-                <div className={`mono dim ${styles.key}`}>{k}</div>
-                <div>{v}</div>
-              </div>
-            ))}
-          </div>
-          <div className={`mono ${styles.joke}`}>{`// ${joke("cocoa")}`}</div>
-        </aside>
-      </div>
+      {/* Portaled to <body> so the sticky header's stacking context can't trap it under the page. */}
+      {mounted && createPortal(drawer, document.body)}
     </>
   );
 }

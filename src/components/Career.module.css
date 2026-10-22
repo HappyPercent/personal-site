@@ -17,35 +17,90 @@
 
 .card {
   border-radius: 28px;
-  padding: 40px 44px;
+  padding: 36px 44px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 }
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* A promotion: the earlier role hangs under a rule, one step quieter. */
+.stage + .stage {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+}
+/* Two roles share one screen, so their bullets run a size smaller. */
+.card:has(.stage + .stage) ul {
+  font-size: var(--fs-body);
+  line-height: 1.5;
+}
+.card:has(.stage + .stage) li {
+  margin-bottom: 4px;
+}
+.promoted {
+  margin-bottom: -4px;
+}
+
 .title {
   margin: 0;
-  font-size: 36px;
+  font-size: var(--fs-3xl);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.05;
+  text-wrap: balance;
 }
+h3.title {
+  font-size: var(--fs-2xl);
+}
+
 .company {
-  font-size: 20px;
+  margin: 0;
+  font-size: var(--fs-md);
+  line-height: 1.4;
 }
+.company .accent {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+
+.team {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: var(--fs-body);
+}
+.teamN {
+  font-size: var(--fs-4xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
 .card ul {
-  margin: 8px 0 0;
+  margin: 4px 0 0;
   padding: 0 0 0 22px;
-  font-size: 18px;
-  line-height: 1.6;
+  font-size: var(--fs-md);
+  line-height: 1.55;
   color: var(--text-2);
 }
 .card li {
   margin-bottom: 6px;
+  text-wrap: pretty;
+}
+.card li:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: minmax(0, 1fr); row-gap: 24px; }
-  .card { padding: 24px; }
-  .title { font-size: 28px; }
-  .card ul { font-size: 16px; }
+  .card { padding: 24px; gap: 22px; }
+  .title { font-size: var(--fs-2xl); }
+  h3.title { font-size: var(--fs-xl); }
+  .teamN { font-size: var(--fs-3xl); }
+  .card ul { font-size: var(--fs-body); }
 }

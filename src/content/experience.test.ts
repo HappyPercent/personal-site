@@ -14,6 +14,7 @@ describe("career content", () => {
     for (const s of timeline) {
       expect(s.title).toBeTruthy();
       expect(s.company).toBeTruthy();
+      expect(s.context, s.company).toMatch(/\.$/);
       expect(s.place).toBeTruthy();
       expect(s.bullets.length).toBeGreaterThanOrEqual(3);
     }

@@ -3,6 +3,10 @@ export type Stage = {
   place: string;
   title: string;
   company: string;
+  // One line on what the company does, for readers who have never heard of it.
+  context: string;
+  // Leadership roles show the team size as a figure.
+  team?: { n: number; label: string };
   bullets: string[];
 };
 
@@ -11,6 +15,7 @@ export const netchex: Stage = {
   place: "Remote",
   title: "Senior Engineer / Tech Lead",
   company: "Netchex",
+  context: "US payroll and HR software.",
   bullets: [
     "Drive architecture and sprint planning for a 10-person team, shipping across React, .NET and BFF layers.",
     "Run 2+ technical interviews a week and own onboarding for new hires.",
@@ -23,6 +28,7 @@ export const stennDev: Stage = {
     place: "Remote",
     title: "Senior Frontend Developer",
     company: "Stenn",
+    context: "UK fintech: invoice financing for exporters.",
     bullets: [
       "Introduced GraphQL for new requests, improving data-fetch interactions by about 20%.",
       "Cut the frontend codebase by 25% through systematic refactoring.",
@@ -35,7 +41,9 @@ export const stennLead: Stage = {
     dates: "Dec 2023 to Dec 2024",
     place: "Barcelona",
     title: "Engineering Manager",
+    team: { n: 5, label: "people on the team I built and led" },
     company: "Stenn",
+    context: "UK fintech: invoice financing for exporters.",
     bullets: [
       "Built and led a new 5-person team owning financing and data integration services.",
       "Introduced an Agile process with a predictable sprint cadence and three deployments per sprint.",
@@ -48,6 +56,7 @@ export const aori: Stage = {
   place: "Moscow",
   title: "Frontend Developer",
   company: "Aori",
+  context: "Platform for planning and running ad campaigns.",
   bullets: [
     "Built a campaign-budget dashboard with real-time WebSocket updates.",
     "Migrated off AngularJS 1.4, removing about 40% of legacy code.",

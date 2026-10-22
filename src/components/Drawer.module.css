@@ -1,16 +1,23 @@
 .pill {
-  font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
   color: var(--text);
   background: var(--bg);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-2);
   border-radius: 999px;
   padding: 10px 16px;
   cursor: pointer;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s var(--ease), transform 0.16s var(--ease);
 }
-.pill:hover {
-  border-color: var(--accent);
+.pill:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pill:hover {
+    border-color: var(--accent);
+  }
 }
 
 .wrap {
@@ -28,10 +35,11 @@
   inset: 0;
   background: rgba(5, 10, 8, 0.55);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.2s var(--ease);
 }
 .wrap[data-open="true"] .scrim {
   opacity: 1;
+  transition-duration: 0.3s;
 }
 
 .drawer {
@@ -39,7 +47,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(560px, 100%);
+  /* On phones a strip of scrim stays visible, so a tap beside the drawer closes it. */
+  width: min(560px, calc(100% - 48px));
   background: var(--surface);
   border-left: 1px solid var(--line);
   padding: 32px 36px;
@@ -48,17 +57,19 @@
   gap: 22px;
   overflow-y: auto;
   transform: translateX(100%);
-  transition: transform 0.35s var(--ease);
+  /* Leaves faster than it arrives. */
+  transition: transform 0.2s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .wrap[data-open="true"] .drawer {
   transform: none;
+  transition-duration: 0.35s;
 }
 
 .top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: var(--fs-xs);
 }
 
 .close {
@@ -68,16 +79,40 @@
   border-radius: 10px;
   width: 44px;
   height: 44px;
-  font-size: 18px;
+  font-size: var(--fs-md);
   cursor: pointer;
 }
 
 .heading {
   margin: 0;
-  font-size: 36px;
+  font-size: var(--fs-3xl);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.03em;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  padding: 0 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  transition: border-color 0.15s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    border-color: var(--accent);
+  }
 }
 
 .rows {
@@ -91,25 +126,37 @@
   gap: 12px;
   padding: 12px 0;
   border-top: 1px solid var(--line);
-  font-size: 15px;
+  font-size: var(--fs-sm);
   line-height: 1.45;
+  color: var(--text-2);
 }
 .key {
-  font-size: 12px;
+  font-size: var(--fs-xs);
   padding-top: 2px;
+}
+.k {
+  font-weight: 600;
+  color: var(--text);
 }
 
 .joke {
   background: var(--surface-2);
   border-radius: 14px;
   padding: 16px;
-  font-size: 13px;
+  font-size: var(--fs-xs);
   line-height: 1.5;
   color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .drawer { padding: 24px 22px; }
+  .heading { font-size: var(--fs-2xl); }
+  .row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pill,
   .scrim,
-  .drawer { transition: none; }
+  .drawer,
+  .link { transition: none; }
 }

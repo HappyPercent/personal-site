@@ -12,7 +12,7 @@ export const jokeBank: Joke[] = [
   { id: "coverage", text: "100% test coverage is a goal. 0% is a lifestyle.", tags: ["testing"] },
   { id: "unwritten", text: "The best code is the code you didn't write.", tags: ["refactoring", "stenn"] },
   { id: "qa-to-fe", text: "Turned a bug finder into a bug maker. Proud.", tags: ["mentoring", "stenn"] },
-  { id: "two-sum", text: "Now I know all the ways of solving Two Sum problem.", tags: ["interviews", "netchex"] },
+  { id: "two-sum", text: "Now I know every way to solve the Two Sum problem.", tags: ["interviews", "netchex"] },
   { id: "pull-requests", text: "I used to approve budgets. Now I approve pull requests.", tags: ["banking", "career"] },
   { id: "no-cookies", text: "No cookies, I prefer milk only.", tags: ["analytics"] },
   { id: "built-with", text: "Built with Next.js, caffeine, and one regrettable CSS transition.", tags: ["site"] },
@@ -20,7 +20,7 @@ export const jokeBank: Joke[] = [
   { id: "loading", text: "Loading... still faster than npm install.", tags: ["loading"] },
   {
     id: "cocoa",
-    text: "I see you. Your visit is saved and I will remember it.",
+    text: "I see you. Relax, I count visits, not visitors.",
     tags: ["analytics"],
   },
 ];

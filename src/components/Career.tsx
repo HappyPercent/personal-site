@@ -15,30 +15,55 @@ function Bullets({ items }: { items: string[] }) {
   );
 }
 
-function RoleCard({ stage }: { stage: Stage }) {
+function StageBlock({ stage, first, dated }: { stage: Stage; first: boolean; dated: boolean }) {
+  const Title = first ? "h2" : "h3";
   return (
-    <div className={cx(shared.card, styles.card)}>
-      <h2 className={styles.title}>{stage.title}</h2>
-      <div className={cx("accent", styles.company)}>{stage.company}</div>
+    <div className={styles.stage}>
+      {!first && <div className={cx("mono dim small", styles.promoted)}>Promoted from</div>}
+      <Title className={styles.title}>{stage.title}</Title>
+      {first && (
+        <p className={styles.company}>
+          <span className="accent">{stage.company}</span> <span className="muted">· {stage.context}</span>
+        </p>
+      )}
+      {dated && (
+        <div className="mono dim small">
+          {stage.dates} · {stage.place}
+        </div>
+      )}
+      {stage.team && (
+        <div className={styles.team}>
+          <span className={styles.teamN}>{stage.team.n}</span>
+          <span className="muted">{stage.team.label}</span>
+        </div>
+      )}
       <Bullets items={stage.bullets} />
     </div>
   );
 }
 
-export function SingleRole({ id, year, stage, deco }: { id: string; year: string; stage: Stage; deco?: "coffee" }) {
+/** One company on one screen. Several stages (newest first) mean promotions inside it. */
+export function Role({ id, year, stages, deco }: { id: string; year: string; stages: Stage[]; deco?: "coffee" }) {
+  const newest = stages[0];
+  const oldest = stages[stages.length - 1];
+  const dates = stages.length > 1 ? `${oldest.dates.split(" to ")[0]} to ${newest.dates.split(" to ")[1]}` : newest.dates;
+  const places = [...new Set(stages.map((s) => s.place).reverse())].join(", then ");
   return (
     <Section id={id}>
       <Wrap className={styles.grid}>
         <div>
-          <div className="rv mono live">02 · CAREER</div>
-          <div className={cx("rv d1", styles.year)} aria-hidden="true">
+          <div className={cx("rv", styles.year)} aria-hidden="true">
             {year}
           </div>
-          <div className="rv d2 mono accent">{stage.dates}</div>
-          <div className="rv d2 muted small">{stage.place}</div>
+          <div className="rv d1 mono muted">{dates}</div>
+          <div className="rv d1 dim small">{places}</div>
         </div>
         <div className="rv d2">
-          <RoleCard stage={stage} />
+          <div className={cx(shared.card, styles.card)}>
+            {stages.map((s, i) => (
+              <StageBlock key={s.title} stage={s} first={i === 0} dated={stages.length > 1} />
+            ))}
+          </div>
         </div>
       </Wrap>
       {deco && <Deco name={deco} pos="br" />}

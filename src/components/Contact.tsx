@@ -1,32 +1,29 @@
+import Link from "next/link";
 import { Actions } from "@/components/Actions";
 import { Deco } from "@/components/Icons";
 import { Section, Wrap } from "@/components/Section";
 import { cx } from "@/lib/cx";
 import styles from "./Contact.module.css";
 
-const upcoming = ["Play my life"];
-
 export function Contact() {
   return (
     <Section id="contact">
       <Wrap>
-        <div className="rv mono live">05 · SAY HELLO</div>
+        <div className="rv mono live">SAY HELLO</div>
         <h2 className={cx("rv d1", styles.title)}>
-          Let&apos;s build
+          Hiring? I&apos;m one
           <br />
-          something <span className="accent">good</span>.
+          <span className="accent">email</span> away.
         </h2>
         <div className="rv d2">
           <Actions large />
         </div>
-        <div className={cx("rv d3", styles.soonRow)}>
-          {upcoming.map((name) => (
-            <div key={name} className={styles.soon}>
-              <span className="mono live small">COMING SOON</span>
-              <div>{name}</div>
-            </div>
-          ))}
-        </div>
+        <p className={cx("rv d3 muted", styles.source)}>
+          Not hiring, just passing by?{" "}
+          <Link href="/wall">
+            Leave a note on the wall <span aria-hidden="true">→</span>
+          </Link>
+        </p>
       </Wrap>
       <Deco name="laptop" pos="br" />
     </Section>

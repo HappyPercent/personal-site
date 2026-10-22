@@ -43,11 +43,21 @@ export function SnapScroller({
   }, []);
 
   return (
-    <main ref={ref} className={styles.scroller}>
+    <main ref={ref} className={styles.scroller} data-section={sections[active]?.id}>
+      {/* Skips the header and the section dots, which come before the content in tab order. */}
+      <a href={`#${sections[0]?.id}`} className={styles.skip}>
+        Skip to content
+      </a>
       {header}
       <nav aria-label="Sections" className={styles.dots}>
         {sections.map((s, i) => (
-          <a key={s.id} href={`#${s.id}`} aria-label={s.label} className={styles.dotLink}>
+          <a
+            key={s.id}
+            href={`#${s.id}`}
+            aria-label={s.label}
+            aria-current={i === active ? "true" : undefined}
+            className={styles.dotLink}
+          >
             <span className={styles.dot} data-active={i === active} />
           </a>
         ))}

@@ -13,6 +13,6 @@ describe("NotFound", () => {
 
   it("links back to the home page", () => {
     renderPage();
-    expect(screen.getByRole("link", { name: "Back to the CV" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "Back to home" })).toHaveAttribute("href", "/");
   });
 });

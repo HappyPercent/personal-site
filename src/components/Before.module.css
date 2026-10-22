@@ -1,23 +1,36 @@
-.title {
+.label {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  text-transform: uppercase;
+}
+
+.roles {
   margin: 16px 0 0;
-  font-size: clamp(30px, 4vw, 56px);
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-display);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
-
-.titleLine {
-  display: block;
+.roles li {
+  text-wrap: balance;
+}
+.roles li + li {
+  margin-top: 0.12em;
 }
 
 .line {
   margin: 28px 0 0;
-  font-size: 22px;
+  font-size: var(--fs-xl);
   line-height: 1.5;
   color: var(--muted);
   max-width: 560px;
 }
 
 @media (max-width: 900px) {
-  .line { font-size: 18px; }
+  .roles { font-size: var(--fs-2xl); }
+  .roles li + li { margin-top: 0.3em; }
+  .line { font-size: var(--fs-md); }
 }

@@ -9,7 +9,7 @@ test.describe("404 page", () => {
   test("tells the code review joke and links home", async ({ page }) => {
     await page.goto("/this-page-does-not-exist");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("404: this page didn't pass code review.");
-    await page.getByRole("link", { name: "Back to the CV" }).click();
+    await page.getByRole("link", { name: "Back to home" }).click();
     await expect(page).toHaveURL("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("Senior Frontend Engineer");
   });

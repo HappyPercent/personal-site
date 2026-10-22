@@ -9,7 +9,7 @@ export function Toolbox() {
   return (
     <Section id="tools">
       <Wrap>
-        <div className="rv mono live">04 · TOOLBOX</div>
+        <div className="rv mono live">TOOLBOX</div>
         <h2 className={cx("rv d1", shared.bigTitle)}>What&apos;s on the bench.</h2>
         <div className={styles.grid}>
           {skills.map((g, i) => (

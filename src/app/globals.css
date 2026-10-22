@@ -10,7 +10,19 @@
   --dim: #93a89d;
   --accent: #f0a64e;
   --live: #5fd4a0;
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Type scale. Numbers, the contact line and the career years keep their own display sizes. */
+  --fs-xs: 13px;
+  --fs-sm: 15px;
+  --fs-body: 16px;
+  --fs-md: 18px;
+  --fs-lg: 20px;
+  --fs-xl: 22px;
+  --fs-2xl: 28px;
+  --fs-3xl: 36px;
+  --fs-4xl: 48px;
+  --fs-display: clamp(36px, 4.5vw, 64px);
 }
 
 * {
@@ -44,18 +56,23 @@ button:focus-visible {
 .muted { color: var(--muted); }
 .dim { color: var(--dim); }
 .mono { font-family: var(--font-mono), monospace; }
-.small { font-size: 13px; }
+.small { font-size: var(--fs-xs); }
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
 
 .rv {
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
 }
-.d1 { transition-delay: 0.08s; }
-.d2 { transition-delay: 0.16s; }
-.d3 { transition-delay: 0.24s; }
-.d4 { transition-delay: 0.32s; }
+.d1 { transition-delay: 0.05s; }
+.d2 { transition-delay: 0.1s; }
+.d3 { transition-delay: 0.15s; }
+.d4 { transition-delay: 0.2s; }
 .js [data-panel]:not([data-in]) .rv {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(12px);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -12,7 +12,7 @@
 
 .title {
   margin: 0;
-  font-size: clamp(36px, 6vw, 72px);
+  font-size: var(--fs-display);
   line-height: 1.05;
   font-weight: 800;
   letter-spacing: -0.03em;
@@ -20,14 +20,14 @@
 
 .text {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--fs-lg);
   line-height: 1.5;
 }
 
 .back {
   margin-top: 16px;
   font-family: var(--font-mono), monospace;
-  font-size: 14px;
+  font-size: var(--fs-xs);
   color: var(--text);
   background: var(--surface);
   border: 1px solid var(--line);
